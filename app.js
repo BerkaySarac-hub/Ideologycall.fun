@@ -4,8 +4,6 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-var flash = require('express-flash');
-var session = require('express-session');
 const nodemailer = require('nodemailer');
 const path = require("path");
 require('dotenv').config();
@@ -14,11 +12,11 @@ const ejs = require("ejs");
 const expressLayouts = require('express-ejs-layouts');
 const mainRoute = require("./routes/MainRoute.js");
 const userRoute = require("./routes/UserRoute.js");
-const UserModel = require("./models/User.js");
+const UserModel = require("./models/User.js")
 const app = express();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, "public/uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now());
@@ -27,14 +25,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 // Set up middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
 app.use(cookieParser());
 // Set the path to your views folder
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(flash());
-app.use(expressValidator());
+
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
