@@ -71,16 +71,16 @@ exports.loginGet = (req,res)=> {
 //     }
 //   })
 // }
-exports.login = async (req,res)=>{
+exports.login = (req,res)=>{
   console.log("login post çalıştı")
   const nickname = req.body.nickname;
-  const email = req.body.email;
-  const password = req.body.password;
+  const email = req.body.Email;
+  const password = req.body.Password;
 
   try {
-    const user = await User.findOne(email);
+    const user =  User.findOne(email);
     console.log("findone  çalıştı")
-    if(user) {
+    if(user !==null) {
       console.log("user bulundu çalıştı")
       let passwordResult =passwordService.comparePassword
       if (passwordResult) {

@@ -39,19 +39,12 @@ const User = {
       callback(rows[0]);
     });
   },
-  findOne : async (Email) => {
-  return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM user WHERE Email = ?', [Email], async (err, rows) => {
-      if (err) reject(err);
-      if (rows.length) {
-        const user = rows[0];
-        resolve(user);
-        return user;
-      } else {
-        resolve(null);
-      }
-    });
-  });
+  findOne : (Email) => {
+    connection.query(`SELECT * FROM user WHERE Email = ('${Email}')`,(err,rows)=>{
+      if(err) throw err;
+      console.log("there is an data :" , rows[0])
+      return(rows[0]);
+    })
 },
 
   update: (id, user, callback) => {
