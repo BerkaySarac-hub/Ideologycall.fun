@@ -39,16 +39,21 @@ const User = {
       callback(rows[0]);
     });
   },
-  findOne : (Email, callback) => {
-    connection.query('SELECT * FROM user WHERE Email = ?', [Email], (err, rows) => {
-      if (err) throw err;
+  findOne : async (Email) => {
+  return new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM user WHERE Email = ?', [Email], async (err, rows) => {
+      if (err) reject(err);
       if (rows.length) {
-        callback(rows[0]);
+        const user = rows[0];
+        resolve(user);
+        return user;
       } else {
-        callback(null);
+        resolve(null);
       }
     });
-  },
+  });
+},
+
   update: (id, user, callback) => {
     connection.query('UPDATE users SET ? WHERE id = ?', [user, id], (err, result) => {
       if (err) throw err;

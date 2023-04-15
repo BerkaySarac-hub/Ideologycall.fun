@@ -44,25 +44,63 @@ exports.loginGet = (req,res)=> {
   })
 }
 
+// exports.login = (req,res)=>{
+//   console.log("login post çalıştı")
+//   const nickname = req.body.nickname;
+//   const email = req.body.email;
+//   const password = req.body.password;
+
+//   User.findOne(email,(err,user)=>{
+//     console.log("findone  çalıştı")
+//     if(err){
+//       console.log("err if  çalıştı"); throw err
+//     }
+//     else if(user) {
+//       console.log("user bulundu çalıştı")
+//       let passwordResult =passwordService.comparePassword(password,user.Password);
+//       if (passwordResult) {
+//         console.log("şifre doğrulama çalıştı true")
+//         console.log("GİRİŞ BAŞARILI");
+        
+//         res.redirect("/");
+//       } else {
+//         console.log("şifre doğrulama çalıştı false")
+//         console.log("GİRİŞ BAŞARISIZ");
+//         return;
+//       }
+//     }
+//   })
+// }
 exports.login = async (req,res)=>{
-  const {nickname,email,password} = req.body;
+  console.log("login post çalıştı")
+  const nickname = req.body.nickname;
+  const email = req.body.email;
+  const password = req.body.password;
+
   try {
-    const user = await login(email, password);
-    if (user) {
-      req.session.user = user;
-      res.status(200).json({
-        user,
-        token:createToken(user.Id)
-      })
-      res.redirect('/');
-    } else {
-      res.render('User/login', { message: 'Invalid credentials',title:"login" });
+    const user = await User.findOne(email);
+    console.log("findone  çalıştı")
+    if(user) {
+      console.log("user bulundu çalıştı")
+      let passwordResult =passwordService.comparePassword
+      if (passwordResult) {
+        console.log("şifre doğrulama çalıştı true")
+        console.log("GİRİŞ BAŞARILI");
+        
+        res.redirect("/");
+      } else {
+        console.log("şifre doğrulama çalıştı false")
+        console.log("GİRİŞ BAŞARISIZ");
+        return;
+      }
     }
   } catch (err) {
-    console.error(err);
-    res.render('User/login', { message: 'An error occurred',title:"login" });
-  }
-}
+    console.log("err if çalıştı", err);
+    throw err;
+    }
+    }
+    
+    
 
 const createToken = (userId)=>{
   return jwt.sign({userId},process.env.JWT_SECRET,{

@@ -11,5 +11,5 @@ const comparePassword = (password, hash) => {
       return bcrypt.hashSync(password, saltRounds);
     },
     comparePassword,
-
+    
   };
