@@ -1,7 +1,7 @@
 // routes/users.js
 const multer = require("multer");
 const upload = multer({ dest: "public/uploads/" });
-
+const authMiddleware = require("../middlewares/authMiddleware")
 const express = require('express');
 const router = express.Router();
 const path = require("path");
@@ -13,4 +13,5 @@ router.get('/register', userController.RegisterGet);
 router.post('/register', upload.single('profilePicture'), userController.Register);
 router.get('/login', userController.loginGet);
 router.post('/login', userController.login);
+router.get('/index',authMiddleware.AuthenticateToken,userController.index);
 module.exports = router;

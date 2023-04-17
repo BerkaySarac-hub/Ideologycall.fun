@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+
 const nodemailer = require('nodemailer');
 const path = require("path");
 require('dotenv').config();

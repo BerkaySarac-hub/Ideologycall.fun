@@ -44,53 +44,26 @@ exports.loginGet = (req,res)=> {
   })
 }
 
-// exports.login = (req,res)=>{
-//   console.log("login post çalıştı")
-//   const nickname = req.body.nickname;
-//   const email = req.body.email;
-//   const password = req.body.password;
 
-//   User.findOne(email,(err,user)=>{
-//     console.log("findone  çalıştı")
-//     if(err){
-//       console.log("err if  çalıştı"); throw err
-//     }
-//     else if(user) {
-//       console.log("user bulundu çalıştı")
-//       let passwordResult =passwordService.comparePassword(password,user.Password);
-//       if (passwordResult) {
-//         console.log("şifre doğrulama çalıştı true")
-//         console.log("GİRİŞ BAŞARILI");
-        
-//         res.redirect("/");
-//       } else {
-//         console.log("şifre doğrulama çalıştı false")
-//         console.log("GİRİŞ BAŞARISIZ");
-//         return;
-//       }
-//     }
-//   })
-// }
 exports.login = (req,res)=>{
   console.log("login post çalıştı")
   const nickname = req.body.nickname;
   const email = req.body.Email;
   const password = req.body.Password;
-
+  const userId = User.getUserId(email);
+  const token = createToken(userId);
+  res.cookie("jsonwebtoken",token,{
+    httpOnly:true,
+    maxAge:1000*60*24,
+  })
   try {
     const user =  User.findOne(email);
-    console.log("findone  çalıştı")
     if(user !==null) {
       console.log("user bulundu çalıştı")
       let passwordResult =passwordService.comparePassword
       if (passwordResult) {
-        console.log("şifre doğrulama çalıştı true")
-        console.log("GİRİŞ BAŞARILI");
-        
-        res.redirect("/");
+        res.redirect("/user/index")
       } else {
-        console.log("şifre doğrulama çalıştı false")
-        console.log("GİRİŞ BAŞARISIZ");
         return;
       }
     }
@@ -98,8 +71,14 @@ exports.login = (req,res)=>{
     console.log("err if çalıştı", err);
     throw err;
     }
-    }
-    
+}
+
+exports.index = (req,res)=>{
+  res.render("User/index",{
+    layout:"layout",
+    title : "Index"
+  })
+}
     
 
 const createToken = (userId)=>{

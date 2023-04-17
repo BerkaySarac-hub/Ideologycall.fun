@@ -34,9 +34,9 @@ const User = {
   },
 
   getById: (id, callback) => {
-    connection.query('SELECT * FROM user WHERE id = ?', id, (err, rows) => {
+    connection.query(`SELECT * FROM user WHERE id = ('${id}')`, (err, rows) => {
       if (err) throw err;
-      callback(rows[0]);
+      return(rows[0]);
     });
   },
   findOne : (Email) => {
@@ -46,7 +46,13 @@ const User = {
       return(rows[0]);
     })
 },
-
+getUserId :(email)=>{
+  connection.query(`SELECT Id FROM user where Email = ('${email}')`,(err,rows)=>{
+    if(err) throw err;
+    console.log("ID =" + rows[0].Id)
+    return(rows[0]);
+  })
+},
   update: (id, user, callback) => {
     connection.query('UPDATE users SET ? WHERE id = ?', [user, id], (err, result) => {
       if (err) throw err;
