@@ -13,6 +13,7 @@ const ejs = require("ejs");
 const expressLayouts = require('express-ejs-layouts');
 const mainRoute = require("./routes/MainRoute.js");
 const userRoute = require("./routes/UserRoute.js");
+const marksismRouter = require("./routes/ideologyRoutes/marksismRoutes.js")
 const UserModel = require("./models/User.js")
 const app = express();
 const storage = multer.diskStorage({
@@ -41,6 +42,7 @@ app.use('/vendor', express.static(path.join(__dirname, 'node_modules/bootstrap/d
 // Set up routes
 app.use('/', mainRoute );
 app.use('/user', userRoute);
+app.use('/marksism', marksismRouter);
 
 // Start server
 app.listen(process.env.PORT, () => {

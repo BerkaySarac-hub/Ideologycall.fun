@@ -45,7 +45,7 @@ exports.loginGet = (req,res)=> {
 }
 
 
-exports.login = (req,res)=>{
+exports.login = async (req,res)=>{
   console.log("login post çalıştı")
   const nickname = req.body.nickname;
   const email = req.body.Email;
@@ -57,12 +57,15 @@ exports.login = (req,res)=>{
     maxAge:1000*60*24,
   })
   try {
-    const user =  User.findOne(email);
+    const user = await User.findOne(email);
+    const UserIdeology = await User.getUserIdeology(email);
+    
     if(user !==null) {
       console.log("user bulundu çalıştı")
       let passwordResult =passwordService.comparePassword
       if (passwordResult) {
-        res.redirect("/user/index")
+        console.log(UserIdeology)
+        res.redirect(`/${UserIdeology}/home`);
       } else {
         return;
       }

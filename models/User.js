@@ -46,6 +46,14 @@ const User = {
       return(rows[0]);
     })
 },
+getUserIdeology : (Email) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`SELECT Ideology FROM user WHERE Email = ('${Email}')`,(err,rows)=>{
+      if(err) return reject(err);
+      resolve(rows[0].Ideology);
+    });
+  });
+},
 getUserId :(email)=>{
   connection.query(`SELECT Id FROM user where Email = ('${email}')`,(err,rows)=>{
     if(err) throw err;
