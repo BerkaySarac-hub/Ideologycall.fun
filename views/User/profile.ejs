@@ -1,0 +1,16 @@
+<h2>PROFİLE</h2>
+
+<form action="/user/profile" method="post">
+    <label for="Nickname">Nickname</label>
+    <input type="text" name="Nickname" value="<%= user.Nickname %>" id="nickname">
+    <label for="Email">Email</label>
+    <input type="email" name="Email" value="<%= user.Email %>" id="Email">
+    <label for="Ideology">Ideology</label>
+    <input type="text" name="Ideology" value="<%= user.Ideology %>" id="Ideology">
+    <label for="Password">Password</label>
+    <input type="password" name="Password" id="Password">
+    <input type="password" placeholder="Password again" name="RepPassword" id="RepPassword">
+    <label for="ProfilePicture">Profile Picture</label>
+    <input type="file" name="ProfilePicture" id="ProfilePicture">
+    <input type="submit" value="UPDATE">
+</form>

@@ -1,9 +1,11 @@
 exports.Index = (req, res) => {
     res.render('Home/index',{
         "title" : "TİTLE",
-        layout:'layout'
+        layout:'layout',
+        
     })
 };
+
 exports.Privacy = (req, res) => {
     res.render('Home/privacy',{
         "title" : "PRİVACY",
@@ -16,21 +18,5 @@ exports.About = (req, res) => {
         layout:'layout'
     })
 };
-exports.pp = (req, res) => {
-    res.render('Home/pp',{
-        "title" : "demo",
-        layout:'layout'
-    })
-};
-const User = require("../models/User");
 
-exports.getAllUsers = (req, res) => {
-    User.getAll((rows) => {
-      res.render('Home/Users', {
-        layout: 'layout',
-        title: 'All Users',
-        users: rows,
-      });
-    });
-  };
-  
+const User = require("../models/User");

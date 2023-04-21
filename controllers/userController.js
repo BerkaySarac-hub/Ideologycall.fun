@@ -18,11 +18,11 @@ exports.Register = (req, res) => {
   if (req.file) {
     const profilePicture = `/uploads/${req.file.filename}`; // Burada, "/" yolunun sunucunun kök dizinine karşılık geldiğine dikkat edin
     const user = {
-      Nickname: nickname,
-      Email: email,
-      Ideology: ideology,
-      Password: hashedPassword,
-      ProfilePicture: profilePicture,
+      Nickname : nickname,
+      Email : email,
+      Ideology : ideology,
+      Password : hashedPassword,
+      ProfilePicture : profilePicture,
       MemberDate : memberDate
     };
     User.create(user,  (err, result) =>{
@@ -50,21 +50,24 @@ exports.login = async (req,res)=>{
   const nickname = req.body.nickname;
   const email = req.body.Email;
   const password = req.body.Password;
-  const userId = User.getUserId(email);
+  const userId = User.getUserByEmail(email);
+  console.log(userId + " USER Id ***************************")
   const token = createToken(userId);
   res.cookie("jsonwebtoken",token,{
     httpOnly:true,
-    maxAge:1000*60*24,
+    maxAge:1000*10,
   })
   try {
-    const user = await User.findOne(email);
-    const UserIdeology = await User.getUserIdeology(email);
+    const user = await User.getUserByEmail(email);
+    const UserIdeology = await User.getIdeologyByEmail(email);
     
+  
     if(user !==null) {
       console.log("user bulundu çalıştı")
       let passwordResult =passwordService.comparePassword
       if (passwordResult) {
         console.log(UserIdeology)
+        
         res.redirect(`/${UserIdeology}/home`);
       } else {
         return;
@@ -82,7 +85,16 @@ exports.index = (req,res)=>{
     title : "Index"
   })
 }
-    
+
+exports.profileGet = async (req,res) => {
+  const userId = req.cookie.userId;
+  const user = await User.getUserById(userId);
+  res.render("/User/profile",{
+    layout:"layout",
+    title:"Profile",
+    user : user
+  })
+}
 
 const createToken = (userId)=>{
   return jwt.sign({userId},process.env.JWT_SECRET,{

@@ -15,21 +15,17 @@
 <body>
     <header>
         <nav>
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">Main</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/register">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link info" href="/about">About this forum</a>
-                </li>
-            </ul>
+            <nav>
+                <ul>
+                    <% if (user) { %>
+                        <li><a href="/profile">Profile</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                        <% } else { %>
+                            <li><a href="/user/register">Register</a></li>
+                            <li><a href="/user/login">Login</a></li>
+                            <% } %>
+                </ul>
+            </nav>
         </nav>
     </header>
     <hr>
