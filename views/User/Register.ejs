@@ -1,5 +1,5 @@
 <h2 id="result"></h2>
-<form action="/user/register" method="POST" enctype="multipart/form-data">
+<form action="/user/register" method="POST">
     <div class="form-group">
         <label for="nickname">Nickname</label>
         <input type="text" name="nickname" class="form-control" id="nickname" placeholder="Enter your nickname">
@@ -15,6 +15,8 @@
             <option value="conservative">Conservative</option>
             <option value="progressive">Progressive</option>
             <option value="moderate">Moderate</option>
+            <option value="Marksism">Marksism</option>
+            <option value="Militarism">Militarism</option>
         </select>
     </div>
     <div class="form-group">
@@ -23,11 +25,7 @@
         <input type="password" name="Repeatpassword" class="form-control" id="Repeatpassword"
             placeholder="Repeat your password">
     </div>
-    <div class="form-group">
-        <label for="profilePicture">Profile Picture</label>
-        <input type="file" name="profilePicture" class="form-control-file" id="profilePicture">
 
-    </div>
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
 <script>

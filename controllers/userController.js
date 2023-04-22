@@ -15,28 +15,22 @@ let memberDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + toda
 exports.Register = (req, res) => {
   const { nickname, email, ideology, password } = req.body;
   const hashedPassword = passwordService.hashPassword(password);
-  if (req.file) {
-    const profilePicture = `/uploads/${req.file.filename}`; // Burada, "/" yolunun sunucunun kök dizinine karşılık geldiğine dikkat edin
     const user = {
-      Nickname : nickname,
-      Email : email,
-      Ideology : ideology,
-      Password : hashedPassword,
-      ProfilePicture : profilePicture,
-      MemberDate : memberDate
+      Nickname: nickname,
+      Email: email,
+      Ideology: ideology,
+      Password: hashedPassword,
+      MemberDate: memberDate,
     };
-    User.create(user,  (err, result) =>{
-      if (err) {
-        console.log(err);
-        res.send("Bir hata oluştu");
-      } else {
-        console.log(result);
-        res.redirect("/");
-      }
+    User.create(user)
+    .then((user) => {
+      console.log(user);
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  } else {JSON
 };
-}
 exports.loginGet = (req,res)=> {
   res.render("User/login",{
     layout:"layout",
@@ -46,30 +40,32 @@ exports.loginGet = (req,res)=> {
 
 
 exports.login = async (req,res)=>{
-  console.log("login post çalıştı")
-  const nickname = req.body.nickname;
+  
+  const nickname = req.body.Nickname;
   const email = req.body.Email;
   const password = req.body.Password;
-  const userId = User.getUserByEmail(email);
-  console.log(userId + " USER Id ***************************")
+  const userId = await User.getUserIdByEmail(email);
+  
   const token = createToken(userId);
   res.cookie("jsonwebtoken",token,{
     httpOnly:true,
-    maxAge:1000*10,
+    maxAge:1000*60*24,
   })
   try {
     const user = await User.getUserByEmail(email);
     const UserIdeology = await User.getIdeologyByEmail(email);
-    
-  
+    const userPass = await User.getPasswordByEmail(email);
+    const userNickname = await User.getNicknameByEmail(email);
     if(user !==null) {
-      console.log("user bulundu çalıştı")
-      let passwordResult =passwordService.comparePassword
-      if (passwordResult) {
-        console.log(UserIdeology)
-        
+      console.log(password ,userPass);
+      let passwordResult = passwordService.comparePassword(password,userPass);
+      console.log("NİCKNAME ======= " +nickname + userNickname);
+      if (passwordResult && nickname == userNickname) {
+        console.log(UserIdeology + "WE ARE İN THE İF")
+        res.locals.loggetIn = true;
         res.redirect(`/${UserIdeology}/home`);
       } else {
+        res.locals.loggetIn = false;
         return;
       }
     }
@@ -87,13 +83,28 @@ exports.index = (req,res)=>{
 }
 
 exports.profileGet = async (req,res) => {
-  const userId = req.cookie.userId;
+  const token = req.cookies.jsonwebtoken;
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+  const userId = decodedToken.userId;
   const user = await User.getUserById(userId);
-  res.render("/User/profile",{
+  res.render("User/profile",{
     layout:"layout",
     title:"Profile",
     user : user
   })
+}
+exports.profilePost = async (req,res) => {
+  const token = req.cookies.jsonwebtoken;
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+  const userId = decodedToken.userId;
+  const user = await User.getUserById(userId);
+  User.update(userId,req.body.Email,req.body.Nickname,passwordService.hashPassword(req.body.Password)).then((result)=> {console.log(result); res.redirect("/user/profile")}).catch(err => {console.log(err);})
+}
+exports.logout = (req, res) => {
+  // session ve jwt tokeni ile ilgili işlemleri burada yapabilirsiniz
+  // örneğin:
+  res.clearCookie("jsonwebtoken"); // jwt tokenini sil
+  res.redirect("/user/login"); // login sayfasına yönlendir
 }
 
 const createToken = (userId)=>{
