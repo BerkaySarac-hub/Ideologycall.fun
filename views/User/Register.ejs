@@ -1,5 +1,5 @@
 <h2 id="result"></h2>
-<form action="/user/register" method="POST">
+<form action="/user/register" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="nickname">Nickname</label>
         <input type="text" name="nickname" class="form-control" id="nickname" placeholder="Enter your nickname">
@@ -25,7 +25,8 @@
         <input type="password" name="Repeatpassword" class="form-control" id="Repeatpassword"
             placeholder="Repeat your password">
     </div>
-
+    <label for="buffer">Profile Picture :</label>
+    <input type="file" name="profilePicture" id="ProfilePictureInput">
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
 <script>

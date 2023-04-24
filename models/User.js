@@ -25,11 +25,31 @@ const userSchema = new mongoose.Schema({
     maxLength: 80,
     required: true
   },
-  
+  ProfilePicture: Buffer,
   MemberDate: {
     type : Date,
     default: () => new Date(),
     required:true
+  },
+  IsDelegate: {
+    type: Boolean,
+    default: false
+  },
+  IsStuff: {
+    type: Boolean,
+    default: false
+  },
+  IsBanned: {
+    type: Boolean,
+    default: false
+  },
+  Rank: {
+    type: String,
+    default: "Newbie"
+  },
+  EntryCount: {
+    type: Number,
+    default: 0
   },
 });
 const User = db.model("User",userSchema)
@@ -120,8 +140,8 @@ const getUserById = async (Id) => {
   }
 };
 
-const update = async (Id,Email,Nickname , Password) => {
-  User.findOneAndUpdate({ _id: Id }, { Email,Email,Nickname:Nickname , Password:Password }, { new: true })
+const update = async (Id,Email,Nickname , Password,profilePicture) => {
+  User.findOneAndUpdate({ _id: Id }, { Email,Email,Nickname:Nickname , Password:Password ,ProfilePicture:profilePicture}, { new: true })
   .then(updatedUser => {
     console.log(updatedUser);
   })

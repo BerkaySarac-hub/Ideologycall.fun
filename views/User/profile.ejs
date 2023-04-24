@@ -1,6 +1,9 @@
 <h2>PROFİLE</h2>
 
 <form action="/user/profile" method="post">
+    <img width="400" height="400" src="<%= user.ProfilePicture %>" alt="">
+    <label for="profilePicture">Profil picture</label>
+    <input type="file" name="profilePicture" id="ProfilePicture">
     <label for="Nickname">Nickname</label>
     <input type="text" name="Nickname" value="<%= user.Nickname %>" id="nickname">
     <label for="Email">Email</label>

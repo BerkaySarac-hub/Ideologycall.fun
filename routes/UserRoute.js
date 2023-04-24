@@ -13,9 +13,11 @@ const userController = require('../controllers/userController');
 router.get('/register', userController.RegisterGet);
 router.post('/register', upload.single('profilePicture'), userController.Register);
 router.get('/login', userController.loginGet);
-router.post('/login', userController.login);
-router.get('/index',authMiddleware.AuthenticateToken,userController.index);
-router.get("/profile",authMiddleware.AuthenticateToken,userController.profileGet);
-router.post("/profile",authMiddleware.AuthenticateToken,userController.profilePost);
+router.post('/login',authMiddleware.IsHeBanned, userController.login);
+router.get('/index',authMiddleware.AuthenticateToken,authMiddleware.IsHeBanned,userController.index);
+router.get("/profile",authMiddleware.AuthenticateToken,authMiddleware.IsHeBanned,userController.profileGet);
+router.post("/profile",authMiddleware.AuthenticateToken,authMiddleware.IsHeBanned,upload.single('profilePicture'),userController.profilePost);
 router.get("/logout",authMiddleware.AuthenticateToken,userController.logout);
+
+
 module.exports = router;
