@@ -70,6 +70,9 @@ const create = (user) => {
 const getUserIdByEmail = async (email) => {
   try {
     const user = await User.findOne({ Email: email }).exec();
+    if (!user) {
+      return;
+    }
     return user._id;
   } catch (err) {
     console.log(err);
@@ -91,6 +94,16 @@ const getUserByEmail = (email) => {
   return User.find({ Email: email })
     .then((users) => {
       console.log("getUserByEmail Çalıştı sonuç ==== "+users);
+      return users;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+const getUserByEmailAndNickname = (email, nickname) => {
+  return User.find({ Email: email, Nickname: nickname })
+    .then((users) => {
+      
       return users;
     })
     .catch((err) => {
@@ -159,7 +172,8 @@ module.exports = {
   getUserIdByEmail,
   getPasswordByEmail,
   getNicknameByEmail,
-  update
+  update,
+  getUserByEmailAndNickname
 };
 /**
  * ProfilePicture: {

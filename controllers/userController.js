@@ -14,7 +14,7 @@ let memberDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + toda
 
 exports.Register = (req, res) => {
   const { nickname, ideology, password } = req.body;
-  const hashedPassword = passwordService.hashPassword(password);
+  const hashedPassword = passwordService.hashPassword(password);  
   const profilePicture = `/uploads/${req.file.filename}`;
   if (req.file) {
     const user = {
@@ -48,39 +48,31 @@ exports.loginGet = (req,res)=> {
 
 
 exports.login = async (req,res)=>{
-  
   const nickname = req.body.Nickname;
   const email = req.body.Email;
   const password = req.body.Password;
-  const userId = await User.getUserIdByEmail(email);
   
-  const token = createToken(userId);
-  res.cookie("jsonwebtoken",token,{
-    httpOnly:true,
-    maxAge:1000*60*24,
+  User.getUserByEmailAndNickname(email,nickname)
+  .then((user)=> {
+    if(user.length === 0){
+      res.redirect("/user/login");
+      return;
+    }
+    const foundedUser = user[0];
+    let passwordResult = passwordService.comparePassword(password,foundedUser.Password);
+    if (!passwordResult) {
+      res.redirect("/user/login");
+      return;
+    }
+    res.locals.loggedIn = true;
+    const token = createToken(foundedUser._id);
+    res.cookie("jsonwebtoken",token,{
+      httpOnly:true,
+      maxAge:1000 * 60 * 24,
+    })
+    res.redirect(`/${foundedUser.Ideology}/home`)
+    
   })
-  try {
-    const user = await User.getUserByEmail(email);
-    const UserIdeology = await User.getIdeologyByEmail(email);
-    const userPass = await User.getPasswordByEmail(email);
-    const userNickname = await User.getNicknameByEmail(email);
-    if(user !==null) {
-      console.log(password ,userPass);
-      let passwordResult = passwordService.comparePassword(password,userPass);
-      console.log("NİCKNAME ======= " +nickname + userNickname);
-      if (passwordResult && nickname == userNickname) {
-        console.log(UserIdeology + "WE ARE İN THE İF")
-        res.locals.loggetIn = true;
-        res.redirect(`/${UserIdeology}/home`);
-      } else {
-        res.locals.loggetIn = false;
-        return;
-      }
-    }
-  } catch (err) {
-    console.log("err if çalıştı", err);
-    throw err;
-    }
 }
 
 exports.index = (req,res)=>{
