@@ -18,6 +18,8 @@ router.get('/index',authMiddleware.AuthenticateToken,authMiddleware.IsHeBanned,u
 router.get("/profile",authMiddleware.AuthenticateToken,authMiddleware.IsHeBanned,userController.profileGet);
 router.post("/profile",authMiddleware.AuthenticateToken,authMiddleware.IsHeBanned,upload.single('profilePicture'),userController.profilePost);
 router.get("/logout",authMiddleware.AuthenticateToken,userController.logout);
-
-
+router.get("/notifications",authMiddleware.AuthenticateToken,userController.getNotifications);
+router.post("/notifications",authMiddleware.AuthenticateToken,userController.notificationsPost); //!
+router.get("/sendmail",authMiddleware.AuthenticateToken,userController.getSendMail);
+router.post("/sendmail",authMiddleware.AuthenticateToken,userController.postSendMail)
 module.exports = router;

@@ -1,0 +1,33 @@
+<div>
+    <ul>
+        <li><a href="/user/sendMail">Send Mail</a></li>
+        <form action="/user/notifications" method="post">
+            <input type="search" name="Nickname" placeholder="SEARCH BY NİCKNAME" id="searchByNickname">
+            <input type="submit" value="search">
+        </form>
+    </ul>
+</div>
+<div>
+    <% emails.forEach(email=> { %>
+        <div>
+            <p>from : <%= email.from%>
+            </p>
+            <h3>
+                <%=email.header%>
+            </h3>
+            <p>
+                <%= email.description %>
+            </p>
+            <p>
+                <%= email.SendDate %>
+            </p>
+
+            <h5 class="text-danger">THİS MAİL WİLL DELETED IN 7 DAYS AUTOMATİCALLY</h5>
+
+            <form action="/user/sendMail" method="post">
+                <input type="text" name="To" id="To">
+
+            </form>
+        </div>
+        <% }) %>
+</div>

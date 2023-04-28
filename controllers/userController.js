@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const passwordService = require('../services/passwordService');
+const Email = require("../models/Email")
 const { login } = require('../services/passwordService');
 const jwt = require("jsonwebtoken");
 const emailSender = require("../services/emailSender")
@@ -133,6 +134,66 @@ exports.authenticateMailToken = async(req,res)=> {
     
   }
 }
+
+exports.getNotifications = async (req, res) => {
+  try {
+    const token = req.cookies.jsonwebtoken;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+    const userId = decodedToken.userId;
+    const user = await User.getUserById(userId);
+    const mails = await Email.getMail(user["Nickname"]); // değişiklik burada
+    res.render("User/notifications", {
+      layout: "layout",
+      emails: mails,
+      title: "notifications"
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+
+exports.notificationsPost = async (req,res)=> {
+  const Nickname = req.body.Nickname;
+  const findedMails = Email.getMailByNickname(Nickname);
+
+  return {
+    emails:findedMails
+  };
+}
+
+exports.getSendMail = async(req,res) => {
+  res.render("User/sendMail",{
+    layout:"layout",
+    title:"SEND MAİL"
+  })
+}
+exports.postSendMail = async (req,res)=>{
+  try {
+    const token = req.cookies.jsonwebtoken;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+    const userId = decodedToken.userId;
+    const user = await User.getUserById(userId);
+    
+    const email = {
+      from: user["Nickname"],
+      to: req.body.To,
+      header: req.body.Header,
+      description: req.body.Description
+    };
+    
+    const result = await Email.sendMail(email);
+    
+    console.log(result);
+    
+    res.redirect("/user/notifications");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("An error occurred while sending email");
+  }
+}
+
 const createToken = (userId)=>{
   return jwt.sign({userId},process.env.JWT_SECRET,{
     expiresIn:"1d",

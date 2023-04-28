@@ -16,6 +16,7 @@ const userRoute = require("./routes/UserRoute.js");
 const marksismRouter = require("./routes/ideologyRoutes/marksismRoutes.js")
 const checkUser = require("./middlewares/authMiddleware.js").checkUser;
 const UserModel = require("./models/User.js")
+const EmailModel = require("./models/Email.js")
 const app = express();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
