@@ -154,13 +154,14 @@ exports.getNotifications = async (req, res) => {
 }
 
 
-exports.notificationsPost = async (req,res)=> {
+exports.notificationsPost = (req,res)=> {
   const Nickname = req.body.Nickname;
   const findedMails = Email.getMailByNickname(Nickname);
-
-  return {
-    emails:findedMails
-  };
+  res.render("User/notifications",{
+    layout:"layout",
+    emails:findedMails,
+    title:"notifications"
+  })
 }
 
 exports.getSendMail = async(req,res) => {
@@ -169,6 +170,17 @@ exports.getSendMail = async(req,res) => {
     title:"SEND MAİL"
   })
 }
+
+exports.visitProfile = async (req,res)=> {
+  const user = await User.getUserByNickname(req.params.nickname)
+  console.log("req params nickname " + req.params.nickname);
+  res.render("User/otherProfile",{
+    layout:"layout",
+    user : user,
+    title : "ideologycall.fun " + user.Nickname + "profile"
+  })
+}
+
 exports.postSendMail = async (req,res)=>{
   try {
     const token = req.cookies.jsonwebtoken;

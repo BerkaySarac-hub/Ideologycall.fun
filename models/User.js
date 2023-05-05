@@ -110,6 +110,14 @@ const getUserByEmailAndNickname = (email, nickname) => {
       console.log(err);
     });
 };
+const getUserByNickname = (nickname)=> {
+  return User.findOne({Nickname : nickname})
+  .then((result) => {
+    return result;
+  }).catch((err)=>{
+    console.log("nickname kullanarak user bulma başarısız" +err);
+  })
+}
 const getPasswordByEmail = (email) => {
   return User.findOne({ Email: email }, { Password: 1 })
     .then((user) => {
@@ -173,7 +181,8 @@ module.exports = {
   getPasswordByEmail,
   getNicknameByEmail,
   update,
-  getUserByEmailAndNickname
+  getUserByEmailAndNickname,
+  getUserByNickname
 };
 /**
  * ProfilePicture: {

@@ -70,7 +70,7 @@ const getMail = async (Nickname) => {
     return results;
 };
 const getMailByNickname = async(Nickname) => {
-    const NicknameResults = await Email.find({From:Nickname});
+    const NicknameResults = await Email.find({from:Nickname});
     if (NicknameResults.length === 0) {
         return;
     }
