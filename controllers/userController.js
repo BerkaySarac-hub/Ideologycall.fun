@@ -17,7 +17,7 @@ exports.Register = (req, res) => {
   const { nickname, ideology, password } = req.body;
   const hashedPassword = passwordService.hashPassword(password);  
   const profilePicture = `/uploads/${req.file.filename}`;
-  if (req.file) {
+  if (req.file) { 
     const user = {
       Nickname: nickname,
       Email: nickname+"@ideologycall.fun",
@@ -172,7 +172,7 @@ exports.getSendMail = async(req,res) => {
 }
 
 exports.visitProfile = async (req,res)=> {
-  const user = await User.getUserByNickname(req.params.nickname)
+  const user = await User.getUserByNickname(req.params.Nickname)
   console.log("req params nickname " + req.params.nickname);
   res.render("User/otherProfile",{
     layout:"layout",
